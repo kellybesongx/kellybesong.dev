@@ -1,0 +1,22 @@
+{
+  "name": "kellybesong.dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "devDependencies": { "turbo": "^1.12.0" },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-work:kellybesongx/kellybesong.dev.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
