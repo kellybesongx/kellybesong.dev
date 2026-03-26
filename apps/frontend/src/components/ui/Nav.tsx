@@ -1,15 +1,5 @@
 
 
-// export default function Nav() {
-//   return (
-//     <nav className="flex justify-start items-center">
-//         <ul>
-//             <li>KELLY-BESONG.DEV</li>
-//         </ul>
-//     </nav>
-//   )
-// }
-
 import { useState } from 'react';
 
 export default function Nav() {
