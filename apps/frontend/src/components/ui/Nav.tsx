@@ -17,10 +17,10 @@ export default function Nav() {
 
   return (
     <nav className="fixed w-full z-50 top-0 left-0 bg-white/80 backdrop-blur-md border-b border-gray-100">
-      <div className="max-w-7xl mx-auto  h-20 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto h-20 flex justify-between items-center max-sm:px-6">
         
         {/* LOGO: Your Name */}
-        <div className="text-xl font-black tracking-tighter text-black">
+        <div className="text-xl font-black tracking-tighter text-black ">
           KELLY-BESONG<span className="text-blue-600">.DEV</span>
         </div>
 
@@ -37,7 +37,7 @@ export default function Nav() {
         </ul> */}
 
         {/* MOBILE MENU BUTTON */}
-        <button 
+        {/* <button 
           className="md:hidden text-black p-2"
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -49,17 +49,18 @@ export default function Nav() {
             )}
           </svg>
         </button>
+        */}
       </div>
 
       {/* MOBILE DROPDOWN */}
-      {isOpen && (
+      {/* {isOpen && (
         <div className="md:hidden bg-white border-b border-gray-100 px-6 py-6 flex flex-col gap-4 animate-in slide-in-from-top duration-300">
           <a href="#work" className="text-lg font-semibold" onClick={() => setIsOpen(false)}>Work</a>
           <a href="#about" className="text-lg font-semibold" onClick={() => setIsOpen(false)}>About</a>
           <a href="#services" className="text-lg font-semibold" onClick={() => setIsOpen(false)}>Services</a>
           <a href="#contact" className="text-lg font-semibold text-blue-600" onClick={() => setIsOpen(false)}>Contact Me</a>
         </div>
-      )}
-    </nav>
+      )} */}
+    </nav> 
   );
 }
