@@ -10,10 +10,13 @@
 //   )
 // }
 
-import { useState } from 'react';
+// import { useState } from 'react';
 
 export default function Nav() {
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
+
+  // ✅ Option B — prefix with underscore to tell TS you know it's unused
+  // const [_isOpen, _setIsOpen] = useState(false);
 
   return (
     <nav className="fixed w-full z-50 top-0 left-0 bg-white/80 backdrop-blur-md border-b border-gray-100">

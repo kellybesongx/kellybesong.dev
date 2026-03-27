@@ -1,4 +1,4 @@
-import heroConfig from "../config/hero.json";
+import heroConfig from "../config/hero.json" assert { type: "json" };
 import HeroRenderer from "@/components/HeroRenderer";
 import { useEffect } from "react";
 import { trackEvent } from "../utils//analytics";
