@@ -18,7 +18,7 @@ type ParagraphItem = {
 };
 
 
-type ConfigItem = HeadingItem |SubHeadingItem | ParagraphItem ;
+export type ConfigItem = HeadingItem |SubHeadingItem | ParagraphItem ;
 
 type HeroRendererProps = {
   config: ConfigItem[];

@@ -1,5 +1,5 @@
 import heroConfigJson from "../config/hero.json";
-import type { ConfigItem } from "@/components/ui/CTAButtons";
+import type { ConfigItem } from "@/components/HeroRenderer";
 
 import HeroRenderer from "@/components/HeroRenderer";
 import { useEffect } from "react";
