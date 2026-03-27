@@ -5,7 +5,7 @@ import { trackEvent } from "../utils//analytics";
 import ProfileCard from "@/components/ProfileCard";
 // import {CTAButtons} from "@/components/ui/CTAButtons";
 import Header from "@/components/layouts/Header"
-import type { ConfigItem } from "@/components/ui/CTAButtons";
+// import type { ConfigItem } from "@/components/ui/CTAButtons";
 
 
 function HomePage() {
