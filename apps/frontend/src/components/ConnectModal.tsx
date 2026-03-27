@@ -105,7 +105,7 @@ const SOCIAL_LINKS: SocialLink[] = [
 
 export default function ConnectWithMeModal({ isOpen, onClose }: ConnectWithMeModalProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  // const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -339,8 +339,8 @@ export default function ConnectWithMeModal({ isOpen, onClose }: ConnectWithMeMod
                 key={link.id}
                 className="cwm-link-item"
                 onClick={() => handleCardClick(link)}
-                onMouseEnter={() => setHoveredId(link.id)}
-                onMouseLeave={() => setHoveredId(null)}
+                // onMouseEnter={() => setHoveredId(link.id)}
+                // onMouseLeave={() => setHoveredId(null)}
                 role="link"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === "Enter" && handleCardClick(link)}

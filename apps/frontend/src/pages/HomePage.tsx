@@ -5,6 +5,7 @@ import { trackEvent } from "../utils//analytics";
 import ProfileCard from "@/components/ProfileCard";
 // import {CTAButtons} from "@/components/ui/CTAButtons";
 import Header from "@/components/layouts/Header"
+import type { ConfigItem } from "@/components/ui/CTAButtons";
 
 
 function HomePage() {
@@ -21,7 +22,7 @@ function HomePage() {
   <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 items-center max-sm:pt-10">
 
     <div className="flex flex-col gap-8">
-      <HeroRenderer config={heroConfig} />
+      <HeroRenderer config={heroConfig as ConfigItem[]} />
     </div>
 
     <div className="flex justify-center lg:justify-end">
