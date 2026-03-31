@@ -273,8 +273,8 @@ export default function ProfileCard() {
             <div className="pc-avatar-circle"><Avatar /></div>
           </div>
           <div className="pc-card-body">
-            <div className="pc-name">Kelly Besong</div>
-            <div className="pc-role">Software Engineer</div>
+            {/* <div className="pc-name">Kelly Besong</div>
+            <div className="pc-role">Software Engineer</div> */}
             <div className="pc-hr" />
           </div>
         </div>
