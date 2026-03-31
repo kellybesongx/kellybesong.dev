@@ -1,11 +1,12 @@
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUsers, faBuildingColumns, faRankingStar, faDiagramPredecessor } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 const stats = [
-  { value: "100+", label: "People Helped",  icon: "👥" },
-  { value: "4+",   label: "Industries",     icon: "🏭" },
-  { value: "12+",  label: "Projects Done",  icon: "🚀" },
-  { value: "95%",  label: "Return & Refer", icon: "⭐" },
+  { value: "100+", label: "People Helped",  icon: <FontAwesomeIcon icon={faUsers} className="text-xl text-white/80 hover:text-indigo-400 transition"/> },
+  { value: "4+",   label: "Industries",     icon: <FontAwesomeIcon icon={faBuildingColumns} className="text-xl text-white/80 hover:text-indigo-400 transition"/> },
+  { value: "12+",  label: "Projects Done",  icon: <FontAwesomeIcon icon={faDiagramPredecessor} className="text-xl text-white/80 hover:text-indigo-400 transition"/> },
+  { value: "95%",  label: "Return & Refer", icon: <FontAwesomeIcon icon={faRankingStar} className="text-xl text-white/80 hover:text-indigo-400 transition"/> },
 ];
 
 export default function ProfileCard() {
@@ -21,7 +22,7 @@ export default function ProfileCard() {
       </svg>
     ) : (
       <img src="/assets/kelly-besong.png" alt="Kelly Besong"
-        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        style={{ width: "115%", height: "115%", objectFit: "cover" }}
         onError={() => setImgError(true)}
       />
     );
@@ -56,7 +57,7 @@ export default function ProfileCard() {
         }
 
         .pc-avatar-circle {
-          width: 96px; height: 96px;
+          width: 120px; height: 120px;
           border-radius: 50%;
           border: 3px solid rgba(255,255,255,0.85);
           overflow: hidden;
@@ -84,7 +85,7 @@ export default function ProfileCard() {
         }
 
         .pc-card-body {
-          padding: 60px 18px 22px;
+          padding: 60px 25px 30px;
           text-align: center;
         }
 
@@ -255,8 +256,8 @@ export default function ProfileCard() {
             <div className="pc-avatar-circle"><Avatar /></div>
           </div>
           <div className="pc-card-body">
-            <div className="pc-name">Kelly Besong</div>
-            <div className="pc-role">Software Engineer</div>
+            {/* <div className="pc-name">Kelly Besong</div>
+            <div className="pc-role">Software Engineer</div> */}
             <div className="pc-hr" />
           </div>
         </div>

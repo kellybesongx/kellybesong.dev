@@ -1,15 +1,15 @@
 [
   {
     "type": "heading",
-    "text": "Turn Complex Problems Into Seamless Digital Experiences."
+    "text": "Turn Complex Ideas Into Simple, Powerful Web Solutions."
   },
   {
     "type": "sub-heading",
-    "text": "Engineering scalable web architectures that power seamless user experiences."
+    "text": "Fast, scalable websites built to improve user experience and grow your business."
   },
   {
     "type": "paragraph",
-    "text": "Delivering end-to-end web solutions, from intuitive user interfaces to robust backend systems. Emphasis is placed on clean code, scalable architecture, and creating intuitive user experiences that drive real results."
+    "text": "Smart web solutions are designed to be easy to use, fast to load, and built to scale as your business grows. From clean design to strong backend systems, every part works together to attract users, improve performance, and drive real results."
   },
  { "type": "button",
   "label": "Work With Me",
@@ -20,3 +20,4 @@
    "modal": "connect-with-me" 
   }
 ]
+

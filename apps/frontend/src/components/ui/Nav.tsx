@@ -10,6 +10,7 @@
 //   )
 // }
 
+import { Link } from "react-router-dom";
 // import { useState } from 'react';
 
 export default function Nav() {
@@ -24,7 +25,7 @@ export default function Nav() {
         
         {/* LOGO: Your Name */}
         <div className="text-xl font-black tracking-tighter text-black ">
-          KELLY-BESONG<span className="text-blue-600">.DEV</span>
+         <Link to="/"> KELLY-BESONG<span className="text-blue-600">.DEV</span></Link> 
         </div>
 
         {/* DESKTOP LINKS */}

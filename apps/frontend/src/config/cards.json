@@ -1,5 +1,6 @@
 [
- { "id": 1, "title": "Project 1", "description": "Description for project 1" },
- { "id": 2, "title": "Project 2", "description": "Description for project 2" },
- { "id": 3, "title": "Project 3", "description": "Description for project 3" }
+ { "id": 1, "text": "Turn Complex Problems Into Seamless Digital Experiences.", "title": "Project 1", "description": "Description for project 1" },
+ 
+ { "id": 2, "text": "Engineering scalable web architectures that power seamless user experiences.", "title": "Project 2", "description": "Description for project 2" },
+ { "id": 3, "text": "Delivering end-to-end web solutions, from intuitive user interfaces to robust backend systems. Emphasis is placed on clean code, scalable architecture, and creating intuitive user experiences that drive real results.", "title": "Project 3", "description": "Description for project 3" }
 ]

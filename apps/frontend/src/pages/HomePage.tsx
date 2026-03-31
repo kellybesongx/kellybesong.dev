@@ -7,33 +7,35 @@ import { trackEvent } from "../utils//analytics";
 import ProfileCard from "@/components/ProfileCard";
 // import {CTAButtons} from "@/components/ui/CTAButtons";
 import Header from "@/components/layouts/Header"
+import Footer from "@/components/layouts/Footer"
 
 const heroConfig = heroConfigJson as ConfigItem[];
 
 function HomePage() {
-
   useEffect(() => {
-  trackEvent("page_view", {
-    page: "home",
-  });
-}, []);
+    trackEvent("page_view", {
+      page: "home",
+    });
+  }, []);
 
   return (
-    <div className="flex flex-col gap-12 px-6 py-12 sm:px-10 sm:py-16 lg:px-30 lg:py-35 bg-gradient-to-tr from-fuchsia-500 via-emerald-600 to-slate-950 min-h-screen">
-      <Header/>
-  <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 items-center max-sm:pt-10">
+    <div className="flex flex-col min-h-screen bg-linear-to-tr from-fuchsia-500 via-emerald-600 to-slate-950">
+      <Header />
+      
+      <div className="grow px-6 py-12 sm:px-10 sm:py-16 lg:px-30 lg:pt-40">
+        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 items-center max-sm:pt-10">
+          <div className="flex flex-col gap-8">
+            <HeroRenderer config={heroConfig} />
+          </div>
 
-    <div className="flex flex-col gap-8">
-      <HeroRenderer config={heroConfig} />
+          <div className="flex justify-center lg:justify-end">
+            <ProfileCard />
+          </div>
+        </div>
+      </div>
+      
+      <Footer />
     </div>
-
-    <div className="flex justify-center lg:justify-end">
-      <ProfileCard />
-    </div>
-
-  </div>
-
-</div>
   );
 }
 
