@@ -12,11 +12,15 @@ import Footer from "@/components/layouts/Footer"
 const heroConfig = heroConfigJson as ConfigItem[];
 
 function HomePage() {
-  useEffect(() => {
-    trackEvent("page_view", {
-      page: "home",
-    });
-  }, []);
+    // Track page view when component mounts
+    useEffect(() => {
+        // TypeScript knows eventName must be string, payload must be object
+        trackEvent('page_view', {
+            page: 'home',
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent
+        });
+    }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-linear-to-tr from-fuchsia-500 via-emerald-600 to-slate-950">

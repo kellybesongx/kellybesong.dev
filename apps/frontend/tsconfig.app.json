@@ -8,7 +8,7 @@
     "types": ["vite/client"],
     "skipLibCheck": true,
 
-           /* @ path alias setUp*/
+    /* @ path alias setUp*/
      "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
