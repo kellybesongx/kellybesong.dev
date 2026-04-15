@@ -2,7 +2,6 @@
 // PURPOSE: The little cards at the top showing quick numbers
 // ANALOGY: Like a dashboard in a car showing speed, fuel, temperature
 
-import React from 'react';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 
 interface StatCardProps {

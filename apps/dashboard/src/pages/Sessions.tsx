@@ -9,7 +9,7 @@
 // LINE 2-4: Import specific components from React
 // useState = creates variables that can change
 // useEffect = runs code when the page loads
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // LINE 5-12: Import Material UI components (pre-made LEGO pieces)
 import {

@@ -1,6 +1,4 @@
 // FILE: apps/dashboard/src/components/Sidebar.tsx
-
-import React from 'react';
 import { 
     Box, 
     List, 
