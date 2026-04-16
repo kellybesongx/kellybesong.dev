@@ -108,7 +108,12 @@ export default function Overview() {
 
             {/* CHARTS SECTION */}
             {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px" >
+                <Box sx={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    minHeight: '400px' 
+}} >
                     <CircularProgress sx={{ color: 'white' }} />
                 </Box>
             ) : (
