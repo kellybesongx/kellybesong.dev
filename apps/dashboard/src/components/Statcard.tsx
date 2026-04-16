@@ -11,7 +11,7 @@ interface StatCardProps {
     loading?: boolean;
 }
 
-export default function StatCard({ title, value, icon, loading = false }: StatCardProps) {
+export default function StatCard({ title, value, icon, loading = false, width, height }: StatCardProps) {
     // Shared styles to keep the "Glassmorphism" consistent
     const cardStyles = {
         backgroundColor: 'rgba(255, 255, 255, 0.05)',
