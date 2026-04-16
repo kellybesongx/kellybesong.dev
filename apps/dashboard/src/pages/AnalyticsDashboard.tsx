@@ -13,11 +13,11 @@ import {
     TableRow,
     Card,
     CardContent,
-    Grid2 as Grid,
     Chip,
     CircularProgress,
     Box
 } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2'
 import { 
     Analytics as AnalyticsIcon,
     Event as EventIcon,

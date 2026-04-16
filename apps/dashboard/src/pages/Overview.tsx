@@ -68,8 +68,8 @@ export default function Overview() {
             {/* <Toolbar />  */}
 
             {/* STAT CARDS - The little cards at the top */}
-         <Grid container spacing={3} alignItems="stretch">
-            <Grid item xs={12} md={3} sx={{ display: 'flex' }}>
+         <Grid container spacing={3} sx={{ alignItems: 'stretch' }}>
+            <Grid size={{ xs: 12, md: 3 }} sx={{ display: 'flex' }}>
                     <StatCard
                         title="Total Events"
                         value={totalEvents}
@@ -78,7 +78,7 @@ export default function Overview() {
                         sx={{ width: '100%', height: '100%' }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
                         title="Unique Sessions"
                         value={uniqueSessions}
@@ -86,7 +86,7 @@ export default function Overview() {
                         loading={loading}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
                         title="Event Types"
                         value={eventTypes}
@@ -94,7 +94,7 @@ export default function Overview() {
                         loading={loading}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
                         title="Avg Events/Session"
                         value={avgEventsPerSession.toFixed(1)}

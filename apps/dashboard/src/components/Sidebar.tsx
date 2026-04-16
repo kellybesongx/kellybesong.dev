@@ -93,12 +93,15 @@ export default function Sidebar() {
                     </ListItemIcon>
                     <ListItemText 
                         primary={item.label} 
-                       slotProps={{
+                        slotProps={{
 
                             primary:{
+                                sx: {
                             fontWeight: isActive ? 700 : 500,
                             fontSize: '0.95rem',
-                            letterSpacing: '0.02em'
+                            letterSpacing: '0.02em'  
+                                }
+                          
                              }
                         }}
                     />

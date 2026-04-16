@@ -163,7 +163,7 @@ export default function Sessions() {
             {/* LINE 71-98: Summary Cards (like little billboards showing numbers) */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
                 {/* Card 1: Total Sessions */}
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <Card>
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
@@ -177,7 +177,7 @@ export default function Sessions() {
                 </Grid>
                 
                 {/* Card 2: Total Events */}
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <Card>
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
@@ -191,7 +191,7 @@ export default function Sessions() {
                 </Grid>
                 
                 {/* Card 3: Average Events Per Session */}
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <Card>
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
