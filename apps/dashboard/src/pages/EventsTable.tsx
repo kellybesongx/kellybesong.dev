@@ -59,7 +59,7 @@ export default function EventsTable() {
         return new Date(dateString).toLocaleString();
     };
 
-    const handleChangePage = (event: unknown, newPage: number) => {
+    const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
@@ -78,8 +78,8 @@ export default function EventsTable() {
 
             {/* Search Bar */}
             <Paper sx={{ p: 2, mb: 3, background: 'rgba(255, 255, 255, 0.05)' }}>
-                <TextField
-  fullWidth
+<TextField
+fullWidth
   variant="outlined"
   placeholder="Search events by name or payload..."
   value={searchTerm}
@@ -111,13 +111,15 @@ export default function EventsTable() {
       color: "rgba(255, 255, 255, 0.5)", // Makes the Search icon match
     },
   }}
-  InputProps={{
-    startAdornment: (
-      <InputAdornment position="start">
-        <SearchIcon />
-      </InputAdornment>
-    ),
-  }}
+    slotProps={{
+        input: {
+            startAdornment: (
+                <InputAdornment position="start">
+                    <SearchIcon/>
+                </InputAdornment>
+            )
+        }
+    }}
 />
             </Paper>
 

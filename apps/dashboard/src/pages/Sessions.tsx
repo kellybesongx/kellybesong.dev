@@ -24,8 +24,8 @@ import {
     Box,          // A generic container (like a <div>)
     Card,         // A box with rounded corners and shadow
     CardContent,  // The inside of a card
-    Grid,         // A layout system (like a checkerboard)
-    Chip          // A small label (like a price tag)
+    Grid        // A layout system (like a checkerboard)
+
 } from '@mui/material';
 
 // LINE 13: Import our service that talks to the backend

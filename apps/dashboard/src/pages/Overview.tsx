@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { Grid, Box, Typography, CircularProgress, Toolbar} from '@mui/material';
-import StatCard from '../components/StatCard';
+import StatCard from '../components/Statcard';
 import { fetchAnalyticsEvents, fetchAnalyticsSummary } from '../services/analyticsService';
 import type { AnalyticsEvent } from '../types/analytics';
 import AnalyticsChart from '../components/Charts/AnalyticsChart'
