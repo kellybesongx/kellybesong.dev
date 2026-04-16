@@ -13,7 +13,7 @@ import {
     TableRow,
     Card,
     CardContent,
-    Grid,
+    Grid2 as Grid,
     Chip,
     CircularProgress,
     Box
@@ -100,7 +100,7 @@ export default function AnalyticsDashboard() {
             
             {/* Summary Cards */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card>
                         <CardContent>
                             <Box sx={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
@@ -118,7 +118,7 @@ export default function AnalyticsDashboard() {
                     </Card>
                 </Grid>
                 
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card>
                         <CardContent>
                             <Box sx={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
@@ -136,7 +136,7 @@ export default function AnalyticsDashboard() {
                     </Card>
                 </Grid>
                 
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card>
                         <CardContent>
                             <Box sx={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
@@ -154,7 +154,7 @@ export default function AnalyticsDashboard() {
                     </Card>
                 </Grid>
                 
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card>
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
