@@ -9,6 +9,8 @@ interface StatCardProps {
     value: number | string;
     icon: string;
     loading?: boolean;
+    width: string;
+    height: string;
 }
 
 export default function StatCard({ title, value, icon, loading = false, width, height }: StatCardProps) {
