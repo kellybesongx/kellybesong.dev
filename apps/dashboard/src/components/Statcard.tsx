@@ -9,11 +9,9 @@ interface StatCardProps {
     value: number | string;
     icon: string;
     loading?: boolean;
-    width: string;
-    height: string;
 }
 
-export default function StatCard({ title, value, icon, loading = false, width, height }: StatCardProps) {
+export default function StatCard({ title, value, icon, loading = false }: StatCardProps) {
     // Shared styles to keep the "Glassmorphism" consistent
     const cardStyles = {
         backgroundColor: 'rgba(255, 255, 255, 0.05)',
