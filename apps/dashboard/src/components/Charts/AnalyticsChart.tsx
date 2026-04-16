@@ -84,25 +84,26 @@ export default function AnalyticsChart({data, title= 'Analytics Overview' }: Ana
                                  fill: '#ffffff70'
                             }}
                         />                        {/* right ruler */}
-                        <Tooltip 
-                            contentStyle={{
-                                background: 'rgba(0, 0, 0, 0.85)',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                borderRadius: '8px',
-                                 color: 'white'
-                                 }}
-
-                         formatter={(value: number | string | undefined, name: string) => {
-                            if (value === undefined || value === null) {
-                                return ['N/A', name]
-                            }
-                            if (name === 'Event Rate %') {
-                                return [`${Number(value).toFixed(1)}%`, name]
-                            }
-                            return [Number(value).toLocaleString(), name]
-                        }}
                         
-                            />                      {/* hover box */}
+                        <Tooltip
+                                contentStyle={{
+                                    background: 'rgba(0, 0, 0, 0.85)',
+                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                    borderRadius: '8px',
+                                    color: 'white'
+                                }}
+                                formatter={((value: number | string | undefined, name: string) => {
+                                    if (value === undefined || value === null) {
+                                        return ['N/A', name]
+                                    }
+                                    if (name === 'Event Rate %') {
+                                        return [`${Number(value).toFixed(1)}%`, name]
+                                    }
+                                    return [Number(value).toLocaleString(), name]
+                                }) as any}
+                            />
+                        
+                                              {/* hover box */}
                         <Legend
                             wrapperStyle={{
                             paddingTop: '20px',

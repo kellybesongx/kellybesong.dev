@@ -1,5 +1,7 @@
 // FILE: Navbar.tsx
 // PURPOSE: The top bar - simple and clean
+
+import React from 'react';
 import { 
     IconButton, 
     Typography, 
