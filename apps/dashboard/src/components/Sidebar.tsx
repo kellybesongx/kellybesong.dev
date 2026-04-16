@@ -11,8 +11,6 @@ import {
     Avatar
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 // Navigation items configuration
 const navItems = [
