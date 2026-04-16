@@ -47,7 +47,8 @@ export default function StatCard({ title, value, icon, loading = false }: StatCa
     return (
         <Card sx={cardStyles}>
             <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent="space-between" }}>
+              
                     <Box>
                         <Typography color="rgba(255,255,255,0.7)" variant="body2" sx={{ mb: 0.5 }}>
                             {title}

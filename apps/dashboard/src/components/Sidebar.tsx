@@ -89,14 +89,17 @@ export default function Sidebar() {
                         color: isActive ? 'white' : 'inherit',
                         minWidth: '40px' 
                     }}>
-                        <Typography fontSize="1.5rem">{item.icon}</Typography>
+                       <Typography sx={{ fontSize: '1.5rem' }}>{item.icon}</Typography>
                     </ListItemIcon>
                     <ListItemText 
                         primary={item.label} 
-                        primaryTypographyProps={{
+                        slotProps={{
+
+                            primary: {
                             fontWeight: isActive ? 700 : 500,
                             fontSize: '0.95rem',
                             letterSpacing: '0.02em'
+                             }
                         }}
                     />
                 </ListItemButton>

@@ -74,7 +74,7 @@ export default function AnalyticsDashboard() {
 
     if (loading) {
         return (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+            <Box sx={{display="flex" justifyContent="center" alignItems="center" minHeight="400px"}}>
                 <CircularProgress />
             </Box>
         );
@@ -103,7 +103,7 @@ export default function AnalyticsDashboard() {
                 <Grid item xs={12} sm={6} md={3}>
                     <Card>
                         <CardContent>
-                            <Box display="flex" alignItems="center" justifyContent="space-between">
+                            <Box sx={{ display="flex" alignItems="center" justifyContent="space-between" }}>
                                 <Box>
                                     <Typography color="textSecondary" gutterBottom>
                                         Total Events
@@ -121,7 +121,7 @@ export default function AnalyticsDashboard() {
                 <Grid item xs={12} sm={6} md={3}>
                     <Card>
                         <CardContent>
-                            <Box display="flex" alignItems="center" justifyContent="space-between">
+                            <Box sx={{ display="flex" alignItems="center" justifyContent="space-between" }}>
                                 <Box>
                                     <Typography color="textSecondary" gutterBottom>
                                         Unique Sessions
@@ -139,7 +139,7 @@ export default function AnalyticsDashboard() {
                 <Grid item xs={12} sm={6} md={3}>
                     <Card>
                         <CardContent>
-                            <Box display="flex" alignItems="center" justifyContent="space-between">
+                            <Box sx={{ display="flex" alignItems="center" justifyContent="space-between" }}>
                                 <Box>
                                     <Typography color="textSecondary" gutterBottom>
                                         Event Types
