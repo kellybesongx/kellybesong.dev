@@ -92,13 +92,15 @@ export default function AnalyticsChart({data, title= 'Analytics Overview' }: Ana
                                  color: 'white'
                                  }}
 
-                             formatter={(value: number, name: string) => {
-                                 if (name === 'Event Rate %') {
-                                     return [`${value.toFixed(1)}%`, name]
-                                     }
-                                 return [value.toLocaleString(), name]
-                                   
-                                }}
+                         formatter={(value: number | string | undefined, name: string) => {
+                            if (value === undefined || value === null) {
+                                return ['N/A', name]
+                            }
+                            if (name === 'Event Rate %') {
+                                return [`${Number(value).toFixed(1)}%`, name]
+                            }
+                            return [Number(value).toLocaleString(), name]
+                        }}
                         
                             />                      {/* hover box */}
                         <Legend
