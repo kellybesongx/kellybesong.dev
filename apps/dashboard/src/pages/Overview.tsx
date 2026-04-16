@@ -75,7 +75,8 @@ export default function Overview() {
                         value={totalEvents}
                         icon="📊"
                         loading={loading}
-                        sx={{ width: '100%', height: '100%' }}
+                        width= '100%'
+                        height= '100%'
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>

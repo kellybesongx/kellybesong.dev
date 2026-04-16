@@ -229,8 +229,15 @@ export default function Sessions() {
                                     </Typography>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Typography variant="body2" fontWeight={600}>
-                                        {session.eventCount}
+                                    <Typography 
+                                        variant="body2" 
+                                        sx={{ 
+                                            fontWeight: 600, 
+                                            color: 'rgba(255, 255, 255, 0.9)', 
+                                            fontFamily: 'monospace' // Numbers often look better in monospace on dashboards
+                                        }}
+                                        >
+                                        {session.eventCount?.toLocaleString() ?? '0'}
                                     </Typography>
                                 </TableCell>
                                 <TableCell>{formatDate(session.firstSeen)}</TableCell>
