@@ -124,6 +124,7 @@ export default function PlanSelectionModal({
                 <Typography variant="body1" sx={{ 
                     color: 'rgba(255,255,255,0.9)', 
                     mb: { xs: 3, sm: 4 },
+                    mt: 3,
                     textAlign: 'center',
                     fontWeight: 500,
                 }}>
