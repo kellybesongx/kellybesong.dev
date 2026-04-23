@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react';
+import type { useState, ChangeEvent } from 'react';
 import { Button, Modal, Box, Typography } from '@mui/material';
 
 interface FormDataType {

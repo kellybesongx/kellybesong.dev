@@ -843,13 +843,15 @@ export default function InquiryFormModal({
             maxWidth="md"
             fullWidth
             fullScreen={isMobile}
-            PaperProps={{
-                sx: {
-                    borderRadius: isMobile ? 0 : '20px',
-                    background: 'linear-gradient(135deg, #d946ef 0%, #059669 50%, #020617 100%)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    margin: isMobile ? 0 : '16px',
-                }
+            slotProps={{
+                 paper: {
+                    sx: {
+                        borderRadius: isMobile ? 0 : '20px',
+                        background: 'linear-gradient(135deg, #d946ef 0%, #059669 50%, #020617 100%)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        margin: isMobile ? 0 : '16px',
+                    }
+                 }
             }}
         >
             {/* ── HEADER ──────────────────────────────────────────────────── */}

@@ -271,16 +271,18 @@ export default function WorkWithMeModal({
             maxWidth="sm"
             fullWidth
             fullScreen={isMobile}
-            PaperProps={{
-                sx: {
-                    borderRadius: isMobile ? 0 : '28px',
-                    background: 'linear-gradient(to top right, #d946ef, #059669, #020617)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    margin: isMobile ? 0 : '32px',
-                    overflow: 'hidden',
-                    width: '100%',
-                    height: '65%',
-                    maxWidth: '900px',
+            slotProps={{
+                paper: {
+                    sx: {
+                         borderRadius: isMobile ? 0 : '28px',
+                        background: 'linear-gradient(to top right, #d946ef, #059669, #020617)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        margin: isMobile ? 0 : '32px',
+                        overflow: 'hidden',
+                        width: '100%',
+                        height: '65%',
+                        maxWidth: '900px',
+                    }
                 }
             }}
         >

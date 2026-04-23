@@ -42,7 +42,7 @@ export default function PlanSelectionModal({
 }: PlanSelectionModalProps) {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+    // const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
     
     const [plans, setPlans] = useState<Plan[]>([]);
 
@@ -77,14 +77,16 @@ export default function PlanSelectionModal({
             maxWidth="lg"
             fullWidth={true} 
             fullScreen={isMobile}
-            PaperProps={{
-                sx: {
-                    borderRadius: isMobile ? 0 : '20px',
-                    // YOUR GRADIENT for modal background
-                    background: 'linear-gradient(135deg, #d946ef 0%, #059669 50%, #020617 100%)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    margin: isMobile ? 0 : '16px',
-                    width: isMobile ? '100%' : 'auto',
+            slotProps={{
+             paper: {
+                    sx: {
+                        borderRadius: isMobile ? 0 : '20px',
+                        // YOUR GRADIENT for modal background
+                        background: 'linear-gradient(135deg, #d946ef 0%, #059669 50%, #020617 100%)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        margin: isMobile ? 0 : '16px',
+                        width: isMobile ? '100%' : 'auto',
+                    }
                 }
             }}
         >
