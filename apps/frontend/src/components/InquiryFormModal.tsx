@@ -1,4 +1,9 @@
 // FILE: InquiryFormModal.tsx
+// BUG FIX: FormWrapper moved outside the component function
+//          It was previously defined inside renderFormFields() which caused
+//          React to create a brand new component on every keystroke,
+//          unmounting and remounting the form fields and losing focus instantly.
+//
 // ANALYTICS EVENTS TRACKED:
 // ─────────────────────────────────────────────────────────────────────────────
 // 1. form_modal_open        → fires when dialog becomes visible
@@ -42,7 +47,27 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import type { SelectedCategory, SelectedPlan } from '../types/WorkWithMe';
 
-// ── INTERFACE ─────────────────────────────────────────────────────────────────
+// ── FORM WRAPPER — defined at MODULE LEVEL (outside the component) ─────────────
+// ⚠️ CRITICAL: This MUST live outside InquiryFormModal.
+// If defined inside the component or inside renderFormFields(), React creates a
+// brand new component reference on every re-render (every keystroke).
+// When React sees a new component reference, it unmounts the old one and mounts
+// the new one — destroying all internal DOM state including input focus.
+// At module level it is created ONCE and never changes — React reuses it safely.
+const FormWrapper = ({ children }: { children: React.ReactNode }) => (
+    <Box sx={{
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        backdropFilter: 'blur(12px)',
+        borderRadius: '16px',
+        p: { xs: 2, sm: 3 },
+        mt: 2,
+        border: '1px solid rgba(255,255,255,0.1)',
+    }}>
+        {children}
+    </Box>
+);
+
+// ── PROPS INTERFACE ───────────────────────────────────────────────────────────
 interface InquiryFormModalProps {
     open: boolean;
     onClose: () => void;
@@ -87,21 +112,17 @@ export default function InquiryFormModal({
     const [details, setDetails] = useState('');
 
     // ── ANALYTICS REFS ────────────────────────────────────────────────────────
-    // useRef = stores values between renders WITHOUT triggering re-renders
+    // useRef stores values between renders WITHOUT triggering re-renders
     // Perfect for timestamps and counters we just need to READ, not display
 
     // Records the exact millisecond this modal opened
-    // Used to calculate "time_spent_seconds" when modal closes
     const openTimeRef = useRef<number | null>(null);
 
     // Tracks which fields the user has interacted with
-    // Stored as a Set so each field is only counted once
-    // A Set is like an array that automatically prevents duplicates
-    // fieldsTouched.add('name') → fieldsTouched.add('name') → still just one 'name'
+    // Set automatically prevents duplicates — each field counted once only
     const fieldsTouchedRef = useRef<Set<string>>(new Set());
 
-    // Counts how many times the user has tried to submit
-    // Multiple submit attempts = they're struggling with validation
+    // Counts total submit attempts — multiple attempts = struggling with form
     const submitAttemptsRef = useRef<number>(0);
 
     // ── SELECT OPTIONS ────────────────────────────────────────────────────────
@@ -122,464 +143,9 @@ export default function InquiryFormModal({
         'Advance my career', 'Start my own business', 'Other'
     ];
 
-    // ── ANALYTICS EVENT 1: FORM MODAL OPEN ───────────────────────────────────
-    // Fires when open prop changes to true
-    // Records timestamp so we can calculate time-on-form later
-    useEffect(() => {
-        if (!open) return;
-        // Guard: if modal is closing (open = false), do nothing here
-
-        // Stamp the exact moment the form became visible
-        openTimeRef.current = Date.now();
-
-        // Reset the fields-touched tracker for this new session
-        // If user opens → closes → opens again, we start fresh
-        fieldsTouchedRef.current = new Set();
-        submitAttemptsRef.current = 0;
-
-        try {
-            trackEvent('form_modal_open', {
-                modal: 'inquiry_form',
-                // Which modal — useful if you have multiple forms
-                category: selectedCategory?.id ?? 'unknown',
-                // 'deliver' | 'work' | 'coffee'
-                categoryTitle: selectedCategory?.title ?? 'unknown',
-                planId: selectedPlan?.plan.id ?? 'unknown',
-                planName: selectedPlan?.plan.name ?? 'unknown',
-                // Which plan were they looking at?
-                // Very useful — "do Starter users actually fill out the form?"
-                planPrice: selectedPlan?.plan.price ?? 0,
-                timestamp: new Date().toISOString(),
-                isMobile,
-                viewport: `${window.innerWidth}x${window.innerHeight}`,
-            });
-        } catch (err) {
-            console.warn('[Analytics] form_modal_open failed silently:', err);
-        }
-    }, [open]);
-    // [open] dependency = only runs when modal opens or closes
-    // NOT on every render — very important for performance
-
-    // ── ANALYTICS EVENT 2: FORM MODAL CLOSE ──────────────────────────────────
-    // Wraps onClose to capture time spent + engagement depth before closing
-    // "Did they read the form carefully or immediately close?"
-    const handleCloseAndReset = () => {
-        try {
-            const timeSpentMs = openTimeRef.current
-                ? Date.now() - openTimeRef.current
-                : 0;
-
-            trackEvent('form_modal_close', {
-                modal: 'inquiry_form',
-                category: selectedCategory?.id ?? 'unknown',
-                timeSpentSeconds: Math.round(timeSpentMs / 1000),
-                // Math.round: 4700ms → 5 seconds — clean numbers in dashboard
-                fieldsTouched: Array.from(fieldsTouchedRef.current),
-                // Convert Set to array for JSON serialisation
-                // ["name", "email"] — shows how far they got before closing
-                fieldsTouchedCount: fieldsTouchedRef.current.size,
-                // Quick count — "they touched 2 out of 4 fields"
-                submitAttempts: submitAttemptsRef.current,
-                // Did they try to submit before giving up?
-                closedAfterSuccess: success,
-                // True = they submitted successfully and are now auto-closing
-                // False = they abandoned the form
-                timestamp: new Date().toISOString(),
-            });
-        } catch (err) {
-            console.warn('[Analytics] form_modal_close failed silently:', err);
-        }
-
-        // Reset all form state
-        setName(''); setEmail(''); setEmailError('');
-        setProjectType(''); setProjectDescription('');
-        setCurrentLevel(''); setPrimaryGoal(''); setGoalsDescription('');
-        setUrgency(''); setDetails('');
-        setError(null); setSuccess(false);
-
-        // ALWAYS call onClose — even if analytics threw an error
-        onClose();
-    };
-
-    // ── ANALYTICS EVENT 3: BACK BUTTON CLICK ─────────────────────────────────
-    // Fires when user clicks the back arrow to go to previous modal
-    // This tells you: did they change their mind about the plan?
-    // High back_click rate on a specific plan = that plan has issues
-    const handleBack = () => {
-        try {
-            const timeSpentMs = openTimeRef.current
-                ? Date.now() - openTimeRef.current
-                : 0;
-
-            trackEvent('form_back_click', {
-                modal: 'inquiry_form',
-                category: selectedCategory?.id ?? 'unknown',
-                planId: selectedPlan?.plan.id ?? 'unknown',
-                planName: selectedPlan?.plan.name ?? 'unknown',
-                timeSpentSeconds: Math.round(timeSpentMs / 1000),
-                // How long before they decided to go back?
-                fieldsTouched: Array.from(fieldsTouchedRef.current),
-                // Did they start filling in fields before going back?
-                // "They typed their name then changed their mind"
-                submitAttempts: submitAttemptsRef.current,
-                timestamp: new Date().toISOString(),
-            });
-        } catch (err) {
-            console.warn('[Analytics] form_back_click failed silently:', err);
-        }
-
-        // ALWAYS call onBack — analytics is secondary to UX
-        onBack();
-    };
-
-    // ── ANALYTICS EVENT 4: FIELD FOCUS ───────────────────────────────────────
-    // Fires the FIRST TIME a user clicks into a specific field
-    // Tells you: which fields do users engage with first?
-    // Are they reaching the description field or giving up earlier?
-    // fieldName parameter = 'name' | 'email' | 'projectType' | etc.
-    const handleFieldFocus = (fieldName: string) => {
-        // Only track the FIRST focus on each field
-        // hasTracked prevents spam events from repeatedly focusing the same field
-        const hasTracked = fieldsTouchedRef.current.has(fieldName);
-
-        if (!hasTracked) {
-            // Add to our Set — prevents duplicate tracking
-            fieldsTouchedRef.current.add(fieldName);
-
-            try {
-                trackEvent('form_field_focus', {
-                    modal: 'inquiry_form',
-                    category: selectedCategory?.id ?? 'unknown',
-                    fieldName,
-                    // 'name', 'email', 'projectType', 'projectDescription' etc
-                    fieldOrder: fieldsTouchedRef.current.size,
-                    // 1 = first field they touched, 2 = second, etc.
-                    // "Most users reach field 2 but not field 3" = drop-off insight
-                    timestamp: new Date().toISOString(),
-                });
-            } catch (err) {
-                console.warn('[Analytics] form_field_focus failed silently:', err);
-            }
-        }
-    };
-
-    // ── EMAIL VALIDATION ──────────────────────────────────────────────────────
-    const validateEmail = (email: string): boolean => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    };
-
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newEmail = e.target.value;
-        setEmail(newEmail);
-        if (newEmail && !validateEmail(newEmail)) {
-            setEmailError('Please enter a valid email address');
-        } else {
-            setEmailError('');
-        }
-    };
-
-    // ── ANALYTICS EVENT 5, 6, 7, 8: FORM SUBMISSION ──────────────────────────
-    // Four possible outcomes when user clicks Submit:
-    // A) Validation fails  → form_validation_error
-    // B) API call starts   → form_submit_attempt (always)
-    // C) API succeeds      → form_submit_success (THE conversion event!)
-    // D) API fails         → form_submit_error
-    const handleSubmit = async () => {
-
-        // Count this attempt regardless of outcome
-        submitAttemptsRef.current += 1;
-        // += 1 increments the counter
-        // ref.current lets us mutate without re-render
-
-        // ── VALIDATION ────────────────────────────────────────────────────
-        if (!name.trim()) {
-            setError('Please enter your name');
-
-            try {
-                // EVENT 5: form_validation_error
-                trackEvent('form_validation_error', {
-                    modal: 'inquiry_form',
-                    category: selectedCategory?.id ?? 'unknown',
-                    failedField: 'name',
-                    // WHICH field caused the failure
-                    errorMessage: 'Name is required',
-                    submitAttemptNumber: submitAttemptsRef.current,
-                    // Is this their 1st or 3rd failed attempt?
-                    timestamp: new Date().toISOString(),
-                });
-            } catch (err) {
-                console.warn('[Analytics] form_validation_error failed silently:', err);
-            }
-            return;
-        }
-
-        if (!email || !validateEmail(email)) {
-            setError('Please enter a valid email address');
-
-            try {
-                trackEvent('form_validation_error', {
-                    modal: 'inquiry_form',
-                    category: selectedCategory?.id ?? 'unknown',
-                    failedField: 'email',
-                    errorMessage: email ? 'Invalid email format' : 'Email is required',
-                    // Two different errors for the same field
-                    // Empty vs invalid format = different UX problems
-                    submitAttemptNumber: submitAttemptsRef.current,
-                    timestamp: new Date().toISOString(),
-                });
-            } catch (err) {
-                console.warn('[Analytics] form_validation_error failed silently:', err);
-            }
-            return;
-        }
-
-        setLoading(true);
-        setError(null);
-
-        // ── EVENT 6: FORM SUBMIT ATTEMPT ──────────────────────────────────
-        // Fires for every submit click that passed basic validation
-        // This is the START of the conversion funnel within the form
-        try {
-            trackEvent('form_submit_attempt', {
-                modal: 'inquiry_form',
-                category: selectedCategory?.id ?? 'unknown',
-                categoryTitle: selectedCategory?.title ?? 'unknown',
-                planId: selectedPlan?.plan.id ?? 'unknown',
-                planName: selectedPlan?.plan.name ?? 'unknown',
-                planPrice: selectedPlan?.plan.price ?? 0,
-                attemptNumber: submitAttemptsRef.current,
-                fieldsTouched: Array.from(fieldsTouchedRef.current),
-                // Full picture of engagement before they hit submit
-                timestamp: new Date().toISOString(),
-                isMobile,
-            });
-        } catch (err) {
-            console.warn('[Analytics] form_submit_attempt failed silently:', err);
-        }
-
-        try {
-            let formData = {};
-
-            if (selectedCategory?.id === 'deliver') {
-                if (!projectType) {
-                    setError('Please select a project type');
-                    try {
-                        trackEvent('form_validation_error', {
-                            modal: 'inquiry_form',
-                            category: 'deliver',
-                            failedField: 'projectType',
-                            errorMessage: 'Project type is required',
-                            submitAttemptNumber: submitAttemptsRef.current,
-                            timestamp: new Date().toISOString(),
-                        });
-                    } catch (err) { console.warn('[Analytics] validation error silent:', err); }
-                    setLoading(false); return;
-                }
-                if (!projectDescription.trim()) {
-                    setError('Please describe your project');
-                    try {
-                        trackEvent('form_validation_error', {
-                            modal: 'inquiry_form',
-                            category: 'deliver',
-                            failedField: 'projectDescription',
-                            errorMessage: 'Project description is required',
-                            submitAttemptNumber: submitAttemptsRef.current,
-                            timestamp: new Date().toISOString(),
-                        });
-                    } catch (err) { console.warn('[Analytics] validation error silent:', err); }
-                    setLoading(false); return;
-                }
-                formData = {
-                    name, email, projectType, projectDescription,
-                    planId: selectedPlan?.plan.id,
-                    planName: selectedPlan?.plan.name,
-                    price: selectedPlan?.plan.price,
-                    createdAt: new Date().toISOString(),
-                    category: 'deliver'
-                };
-
-            } else if (selectedCategory?.id === 'work') {
-                if (!currentLevel) {
-                    setError('Please select your current level');
-                    try {
-                        trackEvent('form_validation_error', {
-                            modal: 'inquiry_form', category: 'work',
-                            failedField: 'currentLevel',
-                            errorMessage: 'Current level is required',
-                            submitAttemptNumber: submitAttemptsRef.current,
-                            timestamp: new Date().toISOString(),
-                        });
-                    } catch (err) { console.warn('[Analytics] validation error silent:', err); }
-                    setLoading(false); return;
-                }
-                if (!primaryGoal) {
-                    setError('Please select your primary goal');
-                    try {
-                        trackEvent('form_validation_error', {
-                            modal: 'inquiry_form', category: 'work',
-                            failedField: 'primaryGoal',
-                            errorMessage: 'Primary goal is required',
-                            submitAttemptNumber: submitAttemptsRef.current,
-                            timestamp: new Date().toISOString(),
-                        });
-                    } catch (err) { console.warn('[Analytics] validation error silent:', err); }
-                    setLoading(false); return;
-                }
-                if (!goalsDescription.trim()) {
-                    setError('Please describe your goals');
-                    try {
-                        trackEvent('form_validation_error', {
-                            modal: 'inquiry_form', category: 'work',
-                            failedField: 'goalsDescription',
-                            errorMessage: 'Goals description is required',
-                            submitAttemptNumber: submitAttemptsRef.current,
-                            timestamp: new Date().toISOString(),
-                        });
-                    } catch (err) { console.warn('[Analytics] validation error silent:', err); }
-                    setLoading(false); return;
-                }
-                formData = {
-                    name, email, currentLevel, primaryGoal, goalsDescription,
-                    planId: selectedPlan?.plan.id,
-                    planName: selectedPlan?.plan.name,
-                    price: selectedPlan?.plan.price,
-                    createdAt: new Date().toISOString(),
-                    category: 'work'
-                };
-
-            } else if (selectedCategory?.id === 'coffee') {
-                if (!urgency) {
-                    setError('Please select urgency level');
-                    try {
-                        trackEvent('form_validation_error', {
-                            modal: 'inquiry_form', category: 'coffee',
-                            failedField: 'urgency',
-                            errorMessage: 'Urgency level is required',
-                            submitAttemptNumber: submitAttemptsRef.current,
-                            timestamp: new Date().toISOString(),
-                        });
-                    } catch (err) { console.warn('[Analytics] validation error silent:', err); }
-                    setLoading(false); return;
-                }
-                if (!details.trim()) {
-                    setError('Please provide more details');
-                    try {
-                        trackEvent('form_validation_error', {
-                            modal: 'inquiry_form', category: 'coffee',
-                            failedField: 'details',
-                            errorMessage: 'Details are required',
-                            submitAttemptNumber: submitAttemptsRef.current,
-                            timestamp: new Date().toISOString(),
-                        });
-                    } catch (err) { console.warn('[Analytics] validation error silent:', err); }
-                    setLoading(false); return;
-                }
-                formData = {
-                    name, email, urgency, details,
-                    planId: selectedPlan?.plan.id,
-                    planName: selectedPlan?.plan.name,
-                    price: selectedPlan?.plan.price,
-                    createdAt: new Date().toISOString(),
-                    category: 'coffee'
-                };
-            }
-
-            // TODO: Replace with real API call to your backend
-            console.log('Submitting form data:', formData);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // ── EVENT 7: FORM SUBMIT SUCCESS ──────────────────────────────
-            // THIS IS THE CONVERSION EVENT — the most valuable in your funnel
-            // Only fires on confirmed success, never on attempts
-            // Use this to calculate: form_submit_success / cta_click = conversion rate
-            try {
-                const timeSpentMs = openTimeRef.current
-                    ? Date.now() - openTimeRef.current
-                    : 0;
-
-                trackEvent('form_submit_success', {
-                    modal: 'inquiry_form',
-                    category: selectedCategory?.id ?? 'unknown',
-                    categoryTitle: selectedCategory?.title ?? 'unknown',
-                    planId: selectedPlan?.plan.id ?? 'unknown',
-                    planName: selectedPlan?.plan.name ?? 'unknown',
-                    planPrice: selectedPlan?.plan.price ?? 0,
-                    // Revenue potential data — "which plans convert best?"
-                    totalTimeSpentSeconds: Math.round(timeSpentMs / 1000),
-                    // How long did it take from form open → successful submit?
-                    totalSubmitAttempts: submitAttemptsRef.current,
-                    // Did they submit on first try or needed multiple attempts?
-                    fieldsTouched: Array.from(fieldsTouchedRef.current),
-                    timestamp: new Date().toISOString(),
-                    isMobile,
-                });
-            } catch (err) {
-                console.warn('[Analytics] form_submit_success failed silently:', err);
-            }
-
-            setSuccess(true);
-
-            // Auto close after showing success message for 2 seconds
-            setTimeout(() => { handleCloseAndReset(); }, 2000);
-
-        } catch (err) {
-            setError('Something went wrong. Please try again.');
-            console.error(err);
-
-            // ── EVENT 8: FORM SUBMIT ERROR ────────────────────────────────
-            // Fires only when the API itself fails (network error, server error)
-            // Different from validation_error — this is a TECHNICAL failure
-            // "How often does my backend fail?" = reliability metric
-            try {
-                trackEvent('form_submit_error', {
-                    modal: 'inquiry_form',
-                    category: selectedCategory?.id ?? 'unknown',
-                    planId: selectedPlan?.plan.id ?? 'unknown',
-                    errorMessage: err instanceof Error ? err.message : 'Unknown error',
-                    // Captures the actual error message for debugging
-                    attemptNumber: submitAttemptsRef.current,
-                    timestamp: new Date().toISOString(),
-                });
-            } catch (analyticsErr) {
-                console.warn('[Analytics] form_submit_error failed silently:', analyticsErr);
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // ── ANALYTICS EVENT 9: URGENCY SELECTED ──────────────────────────────────
-    // Only relevant for the Coffee form — tracks which urgency level users pick
-    // "Do most coffee chats feel urgent or relaxed?"
-    const handleUrgencySelect = (level: string) => {
-        setUrgency(level);
-
-        try {
-            trackEvent('urgency_selected', {
-                modal: 'inquiry_form',
-                category: 'coffee',
-                urgencyLevel: level,
-                // 'Low' | 'Medium' | 'High'
-                previousUrgency: urgency || null,
-                // Did they change their mind? null = first selection
-                // 'Low' then 'High' = they reconsidered
-                timestamp: new Date().toISOString(),
-            });
-        } catch (err) {
-            console.warn('[Analytics] urgency_selected failed silently:', err);
-        }
-    };
-
-    // ── FORM TITLE ────────────────────────────────────────────────────────────
-    const getFormTitle = () => {
-        if (selectedCategory && selectedPlan) {
-            return `${selectedCategory.title} - ${selectedPlan.plan.name}`;
-        }
-        return 'Complete Your Request';
-    };
-
     // ── SHARED SX STYLES ──────────────────────────────────────────────────────
+    // Defined once — reused on every field (DRY principle)
+
     const rowSx = {
         display: 'flex',
         flexDirection: { xs: 'column', sm: 'row' } as const,
@@ -635,9 +201,306 @@ export default function InquiryFormModal({
         },
     };
 
+    // ── ANALYTICS EVENT 1: FORM MODAL OPEN ───────────────────────────────────
+    useEffect(() => {
+        if (!open) return;
+
+        openTimeRef.current = Date.now();
+        fieldsTouchedRef.current = new Set();
+        submitAttemptsRef.current = 0;
+
+        try {
+            trackEvent('form_modal_open', {
+                modal: 'inquiry_form',
+                category: selectedCategory?.id ?? 'unknown',
+                categoryTitle: selectedCategory?.title ?? 'unknown',
+                planId: selectedPlan?.plan.id ?? 'unknown',
+                planName: selectedPlan?.plan.name ?? 'unknown',
+                planPrice: selectedPlan?.plan.price ?? 0,
+                timestamp: new Date().toISOString(),
+                isMobile,
+                viewport: `${window.innerWidth}x${window.innerHeight}`,
+            });
+        } catch (err) {
+            console.warn('[Analytics] form_modal_open failed silently:', err);
+        }
+    }, [open]);
+
+    // ── ANALYTICS EVENT 2: FORM MODAL CLOSE ──────────────────────────────────
+    const handleCloseAndReset = () => {
+        try {
+            const timeSpentMs = openTimeRef.current
+                ? Date.now() - openTimeRef.current
+                : 0;
+
+            trackEvent('form_modal_close', {
+                modal: 'inquiry_form',
+                category: selectedCategory?.id ?? 'unknown',
+                timeSpentSeconds: Math.round(timeSpentMs / 1000),
+                fieldsTouched: Array.from(fieldsTouchedRef.current),
+                fieldsTouchedCount: fieldsTouchedRef.current.size,
+                submitAttempts: submitAttemptsRef.current,
+                closedAfterSuccess: success,
+                timestamp: new Date().toISOString(),
+            });
+        } catch (err) {
+            console.warn('[Analytics] form_modal_close failed silently:', err);
+        }
+
+        setName(''); setEmail(''); setEmailError('');
+        setProjectType(''); setProjectDescription('');
+        setCurrentLevel(''); setPrimaryGoal(''); setGoalsDescription('');
+        setUrgency(''); setDetails('');
+        setError(null); setSuccess(false);
+        onClose();
+    };
+
+    // ── ANALYTICS EVENT 3: BACK BUTTON CLICK ─────────────────────────────────
+    const handleBack = () => {
+        try {
+            const timeSpentMs = openTimeRef.current
+                ? Date.now() - openTimeRef.current
+                : 0;
+
+            trackEvent('form_back_click', {
+                modal: 'inquiry_form',
+                category: selectedCategory?.id ?? 'unknown',
+                planId: selectedPlan?.plan.id ?? 'unknown',
+                planName: selectedPlan?.plan.name ?? 'unknown',
+                timeSpentSeconds: Math.round(timeSpentMs / 1000),
+                fieldsTouched: Array.from(fieldsTouchedRef.current),
+                submitAttempts: submitAttemptsRef.current,
+                timestamp: new Date().toISOString(),
+            });
+        } catch (err) {
+            console.warn('[Analytics] form_back_click failed silently:', err);
+        }
+
+        onBack();
+    };
+
+    // ── ANALYTICS EVENT 4: FIELD FOCUS ───────────────────────────────────────
+    // Fires only the FIRST time each field is focused — not on every click
+    const handleFieldFocus = (fieldName: string) => {
+        if (fieldsTouchedRef.current.has(fieldName)) return;
+        // Guard: already tracked this field — skip to prevent duplicate events
+
+        fieldsTouchedRef.current.add(fieldName);
+
+        try {
+            trackEvent('form_field_focus', {
+                modal: 'inquiry_form',
+                category: selectedCategory?.id ?? 'unknown',
+                fieldName,
+                fieldOrder: fieldsTouchedRef.current.size,
+                timestamp: new Date().toISOString(),
+            });
+        } catch (err) {
+            console.warn('[Analytics] form_field_focus failed silently:', err);
+        }
+    };
+
+    // ── EMAIL VALIDATION ──────────────────────────────────────────────────────
+    const validateEmail = (email: string): boolean => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newEmail = e.target.value;
+        setEmail(newEmail);
+        if (newEmail && !validateEmail(newEmail)) {
+            setEmailError('Please enter a valid email address');
+        } else {
+            setEmailError('');
+        }
+    };
+
+    // ── ANALYTICS EVENT 9: URGENCY SELECTED ──────────────────────────────────
+    const handleUrgencySelect = (level: string) => {
+        setUrgency(level);
+        try {
+            trackEvent('urgency_selected', {
+                modal: 'inquiry_form',
+                category: 'coffee',
+                urgencyLevel: level,
+                previousUrgency: urgency || null,
+                timestamp: new Date().toISOString(),
+            });
+        } catch (err) {
+            console.warn('[Analytics] urgency_selected failed silently:', err);
+        }
+    };
+
+    // ── ANALYTICS EVENTS 5, 6, 7, 8: FORM SUBMISSION ─────────────────────────
+    const handleSubmit = async () => {
+        submitAttemptsRef.current += 1;
+
+        // Validation checks
+        if (!name.trim()) {
+            setError('Please enter your name');
+            try {
+                trackEvent('form_validation_error', {
+                    modal: 'inquiry_form',
+                    category: selectedCategory?.id ?? 'unknown',
+                    failedField: 'name',
+                    errorMessage: 'Name is required',
+                    submitAttemptNumber: submitAttemptsRef.current,
+                    timestamp: new Date().toISOString(),
+                });
+            } catch (err) { console.warn('[Analytics] validation error silent:', err); }
+            return;
+        }
+
+        if (!email || !validateEmail(email)) {
+            setError('Please enter a valid email address');
+            try {
+                trackEvent('form_validation_error', {
+                    modal: 'inquiry_form',
+                    category: selectedCategory?.id ?? 'unknown',
+                    failedField: 'email',
+                    errorMessage: email ? 'Invalid email format' : 'Email is required',
+                    submitAttemptNumber: submitAttemptsRef.current,
+                    timestamp: new Date().toISOString(),
+                });
+            } catch (err) { console.warn('[Analytics] validation error silent:', err); }
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+
+        // EVENT 6: submit attempt (passed basic validation)
+        try {
+            trackEvent('form_submit_attempt', {
+                modal: 'inquiry_form',
+                category: selectedCategory?.id ?? 'unknown',
+                categoryTitle: selectedCategory?.title ?? 'unknown',
+                planId: selectedPlan?.plan.id ?? 'unknown',
+                planName: selectedPlan?.plan.name ?? 'unknown',
+                planPrice: selectedPlan?.plan.price ?? 0,
+                attemptNumber: submitAttemptsRef.current,
+                fieldsTouched: Array.from(fieldsTouchedRef.current),
+                timestamp: new Date().toISOString(),
+                isMobile,
+            });
+        } catch (err) { console.warn('[Analytics] form_submit_attempt silent:', err); }
+
+        try {
+            let formData = {};
+
+            if (selectedCategory?.id === 'deliver') {
+                if (!projectType) {
+                    setError('Please select a project type');
+                    try { trackEvent('form_validation_error', { modal: 'inquiry_form', category: 'deliver', failedField: 'projectType', errorMessage: 'Project type is required', submitAttemptNumber: submitAttemptsRef.current, timestamp: new Date().toISOString() }); } catch (e) { /* silent */ }
+                    setLoading(false); return;
+                }
+                if (!projectDescription.trim()) {
+                    setError('Please describe your project');
+                    try { trackEvent('form_validation_error', { modal: 'inquiry_form', category: 'deliver', failedField: 'projectDescription', errorMessage: 'Project description is required', submitAttemptNumber: submitAttemptsRef.current, timestamp: new Date().toISOString() }); } catch (e) { /* silent */ }
+                    setLoading(false); return;
+                }
+                formData = {
+                    name, email, projectType, projectDescription,
+                    planId: selectedPlan?.plan.id, planName: selectedPlan?.plan.name,
+                    price: selectedPlan?.plan.price, createdAt: new Date().toISOString(), category: 'deliver'
+                };
+
+            } else if (selectedCategory?.id === 'work') {
+                if (!currentLevel) {
+                    setError('Please select your current level');
+                    try { trackEvent('form_validation_error', { modal: 'inquiry_form', category: 'work', failedField: 'currentLevel', errorMessage: 'Current level is required', submitAttemptNumber: submitAttemptsRef.current, timestamp: new Date().toISOString() }); } catch (e) { /* silent */ }
+                    setLoading(false); return;
+                }
+                if (!primaryGoal) {
+                    setError('Please select your primary goal');
+                    try { trackEvent('form_validation_error', { modal: 'inquiry_form', category: 'work', failedField: 'primaryGoal', errorMessage: 'Primary goal is required', submitAttemptNumber: submitAttemptsRef.current, timestamp: new Date().toISOString() }); } catch (e) { /* silent */ }
+                    setLoading(false); return;
+                }
+                if (!goalsDescription.trim()) {
+                    setError('Please describe your goals');
+                    try { trackEvent('form_validation_error', { modal: 'inquiry_form', category: 'work', failedField: 'goalsDescription', errorMessage: 'Goals description is required', submitAttemptNumber: submitAttemptsRef.current, timestamp: new Date().toISOString() }); } catch (e) { /* silent */ }
+                    setLoading(false); return;
+                }
+                formData = {
+                    name, email, currentLevel, primaryGoal, goalsDescription,
+                    planId: selectedPlan?.plan.id, planName: selectedPlan?.plan.name,
+                    price: selectedPlan?.plan.price, createdAt: new Date().toISOString(), category: 'work'
+                };
+
+            } else if (selectedCategory?.id === 'coffee') {
+                if (!urgency) {
+                    setError('Please select urgency level');
+                    try { trackEvent('form_validation_error', { modal: 'inquiry_form', category: 'coffee', failedField: 'urgency', errorMessage: 'Urgency level is required', submitAttemptNumber: submitAttemptsRef.current, timestamp: new Date().toISOString() }); } catch (e) { /* silent */ }
+                    setLoading(false); return;
+                }
+                if (!details.trim()) {
+                    setError('Please provide more details');
+                    try { trackEvent('form_validation_error', { modal: 'inquiry_form', category: 'coffee', failedField: 'details', errorMessage: 'Details are required', submitAttemptNumber: submitAttemptsRef.current, timestamp: new Date().toISOString() }); } catch (e) { /* silent */ }
+                    setLoading(false); return;
+                }
+                formData = {
+                    name, email, urgency, details,
+                    planId: selectedPlan?.plan.id, planName: selectedPlan?.plan.name,
+                    price: selectedPlan?.plan.price, createdAt: new Date().toISOString(), category: 'coffee'
+                };
+            }
+
+            // TODO: Replace with real API call to your backend
+            console.log('Submitting form data:', formData);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // EVENT 7: success — THE conversion event
+            try {
+                const timeSpentMs = openTimeRef.current ? Date.now() - openTimeRef.current : 0;
+                trackEvent('form_submit_success', {
+                    modal: 'inquiry_form',
+                    category: selectedCategory?.id ?? 'unknown',
+                    categoryTitle: selectedCategory?.title ?? 'unknown',
+                    planId: selectedPlan?.plan.id ?? 'unknown',
+                    planName: selectedPlan?.plan.name ?? 'unknown',
+                    planPrice: selectedPlan?.plan.price ?? 0,
+                    totalTimeSpentSeconds: Math.round(timeSpentMs / 1000),
+                    totalSubmitAttempts: submitAttemptsRef.current,
+                    fieldsTouched: Array.from(fieldsTouchedRef.current),
+                    timestamp: new Date().toISOString(),
+                    isMobile,
+                });
+            } catch (err) { console.warn('[Analytics] form_submit_success silent:', err); }
+
+            setSuccess(true);
+            setTimeout(() => { handleCloseAndReset(); }, 2000);
+
+        } catch (err) {
+            setError('Something went wrong. Please try again.');
+            console.error(err);
+
+            // EVENT 8: API/network failure
+            try {
+                trackEvent('form_submit_error', {
+                    modal: 'inquiry_form',
+                    category: selectedCategory?.id ?? 'unknown',
+                    planId: selectedPlan?.plan.id ?? 'unknown',
+                    errorMessage: err instanceof Error ? err.message : 'Unknown error',
+                    attemptNumber: submitAttemptsRef.current,
+                    timestamp: new Date().toISOString(),
+                });
+            } catch (analyticsErr) { console.warn('[Analytics] form_submit_error silent:', analyticsErr); }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // ── FORM TITLE ────────────────────────────────────────────────────────────
+    const getFormTitle = () => {
+        if (selectedCategory && selectedPlan) {
+            return `${selectedCategory.title} - ${selectedPlan.plan.name}`;
+        }
+        return 'Complete Your Request';
+    };
+
     // ── SHARED NAME + EMAIL ROW ───────────────────────────────────────────────
-    // handleFieldFocus('name') tracks when user first clicks the name field
-    // Same for email — tells us engagement depth before drop-off
+    // Defined as JSX variable — reused in all three forms (DRY principle)
     const nameEmailRow = (
         <Box sx={rowSx}>
             <TextField
@@ -645,7 +508,6 @@ export default function InquiryFormModal({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onFocus={() => handleFieldFocus('name')}
-                // ↑ EVENT 4: form_field_focus — fires on first focus only
                 required sx={textFieldSx}
             />
             <TextField
@@ -653,7 +515,6 @@ export default function InquiryFormModal({
                 type="email" value={email}
                 onChange={handleEmailChange}
                 onFocus={() => handleFieldFocus('email')}
-                // ↑ EVENT 4: form_field_focus
                 error={!!emailError}
                 helperText={emailError}
                 required sx={textFieldSx}
@@ -662,20 +523,9 @@ export default function InquiryFormModal({
     );
 
     // ── DYNAMIC FORM FIELDS ───────────────────────────────────────────────────
+    // FormWrapper is imported from module scope above — NOT redefined here
+    // This is the fix: renderFormFields() uses the stable module-level FormWrapper
     const renderFormFields = () => {
-
-        const FormWrapper = ({ children }: { children: React.ReactNode }) => (
-            <Box sx={{
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                backdropFilter: 'blur(12px)',
-                borderRadius: '16px',
-                p: { xs: 2, sm: 3 },
-                mt: 2,
-                border: '1px solid rgba(255,255,255,0.1)',
-            }}>
-                {children}
-            </Box>
-        );
 
         // ── DELIVER FORM ──────────────────────────────────────────────────────
         if (selectedCategory?.id === 'deliver') {
@@ -691,7 +541,6 @@ export default function InquiryFormModal({
                                 value={projectType}
                                 onChange={(e) => setProjectType(e.target.value)}
                                 onOpen={() => handleFieldFocus('projectType')}
-                                // ↑ EVENT 4: tracks when dropdown is opened
                                 label="Project Type"
                                 sx={selectSx}
                             >
@@ -706,8 +555,6 @@ export default function InquiryFormModal({
                             value={projectDescription}
                             onChange={(e) => setProjectDescription(e.target.value)}
                             onFocus={() => handleFieldFocus('projectDescription')}
-                            // ↑ EVENT 4: the textarea is the deepest field
-                            // "Did they reach the description?" = strong intent signal
                             placeholder="Describe what you want your project to look like, features you need, timeline, etc."
                             required sx={textFieldSx}
                         />
@@ -783,8 +630,6 @@ export default function InquiryFormModal({
                                     <Card
                                         key={level}
                                         onClick={() => handleUrgencySelect(level)}
-                                        // ↑ EVENT 9: urgency_selected — uses our
-                                        //   wrapped handler instead of setUrgency directly
                                         sx={{
                                             cursor: 'pointer',
                                             flex: 1,
@@ -838,20 +683,18 @@ export default function InquiryFormModal({
         <Dialog 
             open={open} 
             onClose={handleCloseAndReset}
-            // ↑ handleCloseAndReset wraps onClose — fires form_modal_close analytics
-            // This also catches Escape key and backdrop click automatically
             maxWidth="md"
             fullWidth
             fullScreen={isMobile}
             slotProps={{
-                 paper: {
+                paper: {
                     sx: {
                         borderRadius: isMobile ? 0 : '20px',
                         background: 'linear-gradient(135deg, #d946ef 0%, #059669 50%, #020617 100%)',
                         border: '1px solid rgba(255,255,255,0.2)',
                         margin: isMobile ? 0 : '16px',
                     }
-                 }
+                }
             }}
         >
             {/* ── HEADER ──────────────────────────────────────────────────── */}
@@ -863,10 +706,8 @@ export default function InquiryFormModal({
                 borderBottom: '1px solid rgba(255,255,255,0.15)',
             }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    {/* Back button — fires form_back_click analytics */}
                     <IconButton 
                         onClick={handleBack}
-                        // ↑ handleBack not onBack — fires EVENT 3
                         size="small" 
                         sx={{ color: 'white' }}
                     >
@@ -880,10 +721,8 @@ export default function InquiryFormModal({
                         Complete Your Request
                     </Typography>
                 </Box>
-                {/* Close button — fires form_modal_close analytics */}
                 <IconButton 
                     onClick={handleCloseAndReset}
-                    // ↑ handleCloseAndReset not onClose — fires EVENT 2
                     size="small" 
                     sx={{ color: 'white' }}
                 >
@@ -925,8 +764,6 @@ export default function InquiryFormModal({
                         <Button
                             variant="contained"
                             onClick={handleSubmit}
-                            // ↑ handleSubmit fires Events 5, 6, 7, or 8
-                            // depending on validation result and API outcome
                             disabled={loading}
                             sx={{
                                 background: 'linear-gradient(135deg, #d946ef, #059669)',
