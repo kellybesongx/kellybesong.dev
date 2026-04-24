@@ -734,7 +734,7 @@ export default function InquiryFormModal({
             <DialogContent sx={{ py: { xs: 3, sm: 4 }, px: { xs: 2, sm: 3 } }}>
                 <Typography variant="h5" sx={{ 
                     fontWeight: 700, color: 'white',
-                    textAlign: 'center', mb: 1,
+                    textAlign: 'center', mb: 1, mt: 3,
                     fontSize: { xs: '1.25rem', sm: '1.5rem' }
                 }}>
                     {getFormTitle()}

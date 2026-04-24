@@ -9,6 +9,7 @@ import ProfileCard from "@/components/ProfileCard";
 import Header from "@/components/layouts/Header"
 import Footer from "@/components/layouts/Footer"
 import WorkWithMeButton from "@/components/ui/WorkWithMeButton";
+import HelpMeFreeFlow from "@/components/HelpMeFreeFlow"
 
 const heroConfig = heroConfigJson as ConfigItem[];
 
@@ -31,8 +32,9 @@ function HomePage() {
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 items-center max-sm:pt-10">
           <div className="flex flex-col gap-8">
             <HeroRenderer config={heroConfig} />
-            <div>
+            <div className="flex gap-5 flex-col sm:flex-row">
             <WorkWithMeButton/>
+            <HelpMeFreeFlow/>
             </div>
           </div>
 

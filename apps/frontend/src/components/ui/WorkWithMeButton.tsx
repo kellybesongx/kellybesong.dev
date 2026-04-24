@@ -7,6 +7,8 @@ import WorkWithMeModal from '../WorkWithMeModal';
 import PlanSelectionModal from '../planSelectionModal';
 import InquiryFormModal from '../InquiryFormModal';  // We'll create this next
 import type { SelectedCategory, SelectedPlan } from '../../types/WorkWithMe';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 
 export default function WorkWithMeButton() {
     // Track which modals are open
@@ -59,6 +61,8 @@ export default function WorkWithMeButton() {
                     fontSize: { xs: '0.875rem', sm: '1rem' },
                     fontWeight: 600,
                     borderRadius: '9999px',
+                    display: 'flex',
+                    gap: 3,
                     textTransform: 'none',
                     boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
                     transition: 'all 0.3s ease',
@@ -69,7 +73,7 @@ export default function WorkWithMeButton() {
                     },
                 }}
             >
-                Work With Me ✨
+                Work With Me   <FontAwesomeIcon icon={faAnglesRight} />
             </Button>
 
             {/* MODAL 1: Category Selection */}
