@@ -261,7 +261,7 @@ export default function WebsiteAuditForm({ open, onClose, onBack, optionTitle }:
                 {!success && (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                                     fullWidth
                                     label="Your Name"
@@ -271,7 +271,7 @@ export default function WebsiteAuditForm({ open, onClose, onBack, optionTitle }:
                                     sx={inputSx}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                                     fullWidth
                                     label="Email Address"

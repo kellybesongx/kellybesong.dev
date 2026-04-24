@@ -544,9 +544,12 @@ export default function TechCatchupForm({ open, onClose, onBack, optionTitle }: 
                                     onFocus={() => handleFieldFocus('preferredDate')}
                                     // ↑ EVENT 4: scheduling fields are friction points
                                     // "Did users reach date selection?" = key insight
-                                    inputProps={{ min: today }}
-                                    InputLabelProps={{ shrink: true }}
-                                    sx={inputSx}
+                                 slotProps={{
+                                input: { inputProps: { min: today } },
+                                inputLabel: { shrink: true }
+                            }}
+                            sx={inputSx}
+                                   
                                 />
                             </Box>
                             <Box sx={{ flex: 1 }}>
@@ -559,8 +562,12 @@ export default function TechCatchupForm({ open, onClose, onBack, optionTitle }: 
                                     onChange={(e) => setPreferredTime(e.target.value)}
                                     onFocus={() => handleFieldFocus('preferredTime')}
                                     // ↑ EVENT 4
-                                    InputLabelProps={{ shrink: true }}
+                                      slotProps={{
+                               
+                                inputLabel: { shrink: true }
+                                  }}
                                     sx={inputSx}
+                                   
                                 />
                             </Box>
                         </Box>

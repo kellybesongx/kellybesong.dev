@@ -302,7 +302,7 @@ export default function HelpMeFreeModal({
                             }}
                         >
                             <CardContent sx={{ textAlign: 'center', p: 3 }}>
-                                <Typography fontSize="3rem" sx={{ mb: 1.5 }}>
+                                <Typography sx={{ fontSize: '1rem', mb: 1 }}>
                                     {option.icon}
                                 </Typography>
                                 <Typography variant="h6" sx={{ 
