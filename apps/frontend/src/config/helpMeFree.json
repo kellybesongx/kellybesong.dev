@@ -1,0 +1,28 @@
+{
+  "freeOptions": [
+    {
+      "id": "fifteen_min_chat",
+      "title": "15-Minute Chat",
+      "description": "Quick call to answer your questions or unblock you",
+      "icon": "👥",
+      "color": "#d946ef",
+      "formType": "quick_chat"
+    },
+    {
+      "id": "audit_website",
+      "title": "Audit My Website",
+      "description": "Get a free website performance and UX audit",
+      "icon": "💻",
+      "color": "#059669",
+      "formType": "website_audit"
+    },
+    {
+      "id": "tech_catchup",
+      "title": "Tech Catch-up",
+      "description": "Schedule a relaxed chat about tech, career, or ideas",
+      "icon": "🧑🏿‍💻",
+      "color": "#f59e0b",
+      "formType": "tech_catchup"
+    }
+  ]
+}
