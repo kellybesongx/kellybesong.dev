@@ -23,13 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-
-# Environment files (contain secrets)
-.env
-.env.development
-.env.production
-.env.local
-.env.*.local
-
-# But allow example file
-!.env.example
+EventBarChart.tsx
+EventLineChart.tsx
+EventPieChart.tsx
