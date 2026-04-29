@@ -1,6 +1,12 @@
 // import { Button } from "@mui/material";
 // import { trackEvent } from "@/utils/analytics"
 
+// Temporary debug component
+console.log('🔧 Environment Variables:');
+console.log('  VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('  VITE_DEBUG_ANALYTICS:', import.meta.env.VITE_DEBUG_ANALYTICS);
+console.log('  Mode:', import.meta.env.MODE);
+
 type HeadingItem = {
   type: "heading";
   text: string;
