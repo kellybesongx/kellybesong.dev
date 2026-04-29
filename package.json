@@ -5,8 +5,14 @@
   "description": "",
   "main": "index.js",
   "private": true,
-  "workspaces": ["apps/*", "packages/*", "dashboard/*"],
-  "devDependencies": { "turbo": "^2.0.0" },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "dashboard/*"
+  ],
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
@@ -19,5 +25,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@mui/icons-material": "^9.0.0"
+  }
 }

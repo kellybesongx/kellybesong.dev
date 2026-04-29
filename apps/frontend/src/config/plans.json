@@ -1,0 +1,185 @@
+{
+  "categories": [
+    {
+      "id": "deliver",
+      "title": "Deliver My Project",
+      "description": "I need a complete website or web application built from scratch",
+      "icon": "🚀",
+      "color": "#6366f1",
+      "plans": [
+        {
+          "id": "deliver_basic",
+          "name": "Essential MVP",
+          "price": "$1,500",
+          "value": [
+            "3-page website",
+            "Mobile responsive",
+            "Contact form",
+            "2 weeks delivery"
+          ],
+          "specs": [
+            "React",
+            "Tailwind CSS",
+            "SEO optimized",
+            "Basic animations"
+          ]
+        },
+        {
+          "id": "deliver_pro",
+          "name": "Professional",
+          "price": "$3,500",
+          "value": [
+            "Full website (up to 8 pages)",
+            "CMS integration",
+            "End-to-end testing",
+            "4 weeks delivery"
+          ],
+          "specs": [
+            "React/Next.js",
+            "TypeScript",
+            "Database integration",
+            "Email setup",
+            "Performance optimization"
+          ]
+        },
+        {
+          "id": "deliver_enterprise",
+          "name": "Enterprise",
+          "price": "$7,500+",
+          "value": [
+            "Complex web application",
+            "Custom features",
+            "Priority support",
+            "8 weeks delivery"
+          ],
+          "specs": [
+            "Full-stack development",
+            "Authentication",
+            "Payment integration",
+            "Admin dashboard",
+            "Analytics",
+            "1 year maintenance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work",
+      "title": " Work With Me",
+      "description": "I need consulting, code review, or ongoing development help",
+      "icon": "💼",
+      "color": "#10b981",
+      "plans": [
+        {
+          "id": "work_hourly",
+          "name": "Hourly Consulting",
+          "price": "$85/hour",
+          "value": [
+            "Code review",
+            "Bug fixes",
+            "Technical advice",
+            "24hr response"
+          ],
+          "specs": [
+            "Zoom calls",
+            "Screen sharing",
+            "Code samples",
+            "Documentation"
+          ]
+        },
+        {
+          "id": "work_weekly",
+          "name": "Weekly Retainer",
+          "price": "$2,500/week",
+          "value": [
+            "40 hours/week",
+            "Full development",
+            "Project management",
+            "Daily updates"
+          ],
+          "specs": [
+            "Dedicated developer",
+            "Sprint planning",
+            "Code reviews",
+            "Deployment support"
+          ]
+        },
+        {
+          "id": "work_monthly",
+          "name": "Monthly Partnership",
+          "price": "$8,500/month",
+          "value": [
+            "Team augmentation",
+            "Strategic planning",
+            "Architecture design",
+            "Priority queue"
+          ],
+          "specs": [
+            "2+ developers",
+            "Product management",
+            "QA testing",
+            "DevOps support"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coffee",
+      "title": "Coffee With Me",
+      "description": "I want a quick chat, advice, or mentorship session",
+      "icon": "☕",
+      "color": "#f59e0b",
+      "plans": [
+        {
+          "id": "coffee_30min",
+          "name": "Quick Coffee",
+          "price": "$50",
+          "value": [
+            "30 min call",
+            "Portfolio review",
+            "Career advice",
+            "Q&A session"
+          ],
+          "specs": [
+            "Video call",
+            "Follow-up notes",
+            "Resource list"
+          ]
+        },
+        {
+          "id": "coffee_1hour",
+          "name": "Deep Dive",
+          "price": "$100",
+          "value": [
+            "1 hour call",
+            "Code review",
+            "Project roadmap",
+            "Technical strategy"
+          ],
+          "specs": [
+            "Screen sharing",
+            "Actionable plan",
+            "30-day email support"
+          ]
+        },
+        {
+          "id": "coffee_mentor",
+          "name": "Mentorship",
+          "price": "$400/month",
+          "value": [
+            "4 calls/month",
+            "Code reviews",
+            "Career guidance",
+            "Portfolio building"
+          ],
+          "specs": [
+            "Slack access",
+            "Resume review",
+            "Interview prep",
+            "Network introduction"
+          ]
+        }
+      ]
+    }
+  ]
+}
