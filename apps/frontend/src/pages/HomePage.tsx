@@ -10,6 +10,9 @@ import Header from "@/components/layouts/Header"
 import Footer from "@/components/layouts/Footer"
 import WorkWithMeButton from "@/components/ui/WorkWithMeButton";
 import HelpMeFreeFlow from "@/components/HelpMeFreeFlow"
+// import ChatWidget from "@/components/ChatWidget"
+import ChatWidget from '@/components/chatWidget/ChatWidget';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const heroConfig = heroConfigJson as ConfigItem[];
 
@@ -41,6 +44,10 @@ function HomePage() {
           <div className="flex justify-center lg:justify-end">
             <ProfileCard />
           </div>
+          <ErrorBoundary>
+          <ChatWidget/>
+
+          </ErrorBoundary>
         </div>
       </div>
       

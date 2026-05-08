@@ -33,3 +33,6 @@ dist-ssr
 
 # But allow example file
 !.env.example
+
+chat.t
+

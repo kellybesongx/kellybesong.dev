@@ -1,0 +1,14 @@
+{
+ " project": {
+    "message": "I can help you build your project quickly.",
+    "cta": "Deliver My Project"
+  },
+  "advice": {
+    "message": "Let’s discuss your ideas over a quick chat.",
+    "cta": "Coffee With Me"
+  },
+  "mentorship": {
+    "message": "I can guide you step by step.",
+    "cta": "Mentor Me"
+  }
+}

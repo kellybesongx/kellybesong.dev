@@ -1,0 +1,14 @@
+{
+  "project": {
+    "message": "I can help you build your project quickly. Let's discuss your requirements and create a timeline that works for you!",
+    "cta": "Deliver My Project 🚀"
+  },
+  "advice": {
+    "message": "Let's discuss your ideas over a quick chat. I've helped many developers overcome similar challenges.",
+    "cta": "Coffee With Me ☕"
+  },
+  "mentorship": {
+    "message": "I can guide you step by step through your learning journey. Let's create a personalized roadmap for you.",
+    "cta": "Mentor Me 🎓"
+  }
+}
